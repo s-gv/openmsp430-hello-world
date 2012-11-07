@@ -1,0 +1,7 @@
+NET  clk       LOC="AG18";  // 27MHz
+NET  rst           LOC="AJ6"; // Centre switch
+NET  led           LOC="E8"; // Centre
+NET  dbg_txd              LOC="H33"; //HDR1_2
+NET  dbg_rxd               LOC="F34";//HDR1_4
+NET  dbg_en         LOC="U25"; //GPIO_DIP_SW1
+NET  cpu_rst            LOC="V8"; // GPIO_SW_S

@@ -1,0 +1,265 @@
+
+leds.elf:     file format elf32-msp430
+
+SYMBOL TABLE:
+0000f000 l    d  .text	00000000 .text
+0000ffe0 l    d  .vectors	00000000 .vectors
+00000000 l    d  .debug_aranges	00000000 .debug_aranges
+00000000 l    d  .debug_info	00000000 .debug_info
+00000000 l    d  .debug_abbrev	00000000 .debug_abbrev
+00000000 l    d  .debug_line	00000000 .debug_line
+00000000 l    d  .debug_frame	00000000 .debug_frame
+00000000 l    d  .debug_str	00000000 .debug_str
+00000000 l    d  .debug_loc	00000000 .debug_loc
+00000000 l    d  .debug_ranges	00000000 .debug_ranges
+00000200 l    d  .noinit.crt0	00000000 .noinit.crt0
+00000000 l    df *ABS*	00000000 main.c
+0000f0dc l       .text	00000000 __br_unexpected_
+00000000 g       *ABS*	00000000 __data_size
+0000f0dc  w      .text	00000000 __isr_14
+0000f0dc  w      .text	00000000 __isr_4
+0000f12a g       .text	00000000 _etext
+00000000 g       *ABS*	00000000 __bss_size
+0000f000  w      .text	00000000 __watchdog_support
+0000f124  w      .text	00000000 __stop_progExec__
+0000f0dc  w      .text	00000000 __isr_11
+0000f0dc  w      .text	00000000 __isr_5
+0000f12a g       *ABS*	00000000 __data_load_start
+0000f0dc g       .text	00000000 __dtors_end
+0000f0dc  w      .text	00000000 __isr_2
+0000f0dc  w      .text	00000000 __isr_10
+00000200 g     O .noinit.crt0	00000002 __wdt_clear_value
+0000f0dc  w      .text	00000000 __isr_7
+0000ffe0 g     O .vectors	00000020 __ivtbl_16
+0000f0dc  w      .text	00000000 __isr_0
+0000f028  w      .text	00000000 __do_clear_bss
+0000f122  w      .text	00000000 _unexpected_
+0000f0dc  w      .text	00000000 __isr_8
+0000f0dc  w      .text	00000000 __isr_3
+0000f000  w      .text	00000000 _reset_vector__
+0000f0dc g       .text	00000000 __ctors_start
+0000f0dc  w      .text	00000000 __isr_12
+0000f010  w      .text	00000000 __do_copy_data
+00000200 g       .text	00000000 __bss_start
+0000f03e g     F .text	0000009e main
+0000f0dc  w      .text	00000000 __isr_13
+00010000 g       .vectors	00000000 _vectors_end
+0000f0e0 g     F .text	00000042 delay
+0000f0dc  w      .text	00000000 __isr_9
+0000f00c  w      .text	00000000 __init_stack
+0000f0dc g       .text	00000000 __dtors_start
+0000f0dc  w      .text	00000000 __isr_6
+0000f0dc g       .text	00000000 __ctors_end
+00000300 g       *ABS*	00000000 __stack
+0000f0dc  w      .text	00000000 __isr_1
+00000200 g       .text	00000000 _edata
+00000200 g       .text	00000000 _end
+0000f124  w      .text	00000000 _endless_loop__
+0000f010  w      .text	00000000 __low_level_init
+00000200 g       .text	00000000 __data_start
+00000120 g       *ABS*	00000000 __WDTCTL
+
+
+
+Disassembly of section .text:
+
+0000f000 <__watchdog_support>:
+    f000:	55 42 20 01 	mov.b	&0x0120,r5	
+    f004:	35 d0 08 5a 	bis	#23048,	r5	;#0x5a08
+    f008:	82 45 00 02 	mov	r5,	&0x0200	
+
+0000f00c <__init_stack>:
+    f00c:	31 40 00 03 	mov	#768,	r1	;#0x0300
+
+0000f010 <__do_copy_data>:
+    f010:	3f 40 00 00 	mov	#0,	r15	;#0x0000
+    f014:	0f 93       	tst	r15		
+    f016:	08 24       	jz	$+18     	;abs 0xf028
+    f018:	92 42 00 02 	mov	&0x0200,&0x0120	
+    f01c:	20 01 
+    f01e:	2f 83       	decd	r15		
+    f020:	9f 4f 2a f1 	mov	-3798(r15),512(r15);0xf12a(r15), 0x0200(r15)
+    f024:	00 02 
+    f026:	f8 23       	jnz	$-14     	;abs 0xf018
+
+0000f028 <__do_clear_bss>:
+    f028:	3f 40 00 00 	mov	#0,	r15	;#0x0000
+    f02c:	0f 93       	tst	r15		
+    f02e:	07 24       	jz	$+16     	;abs 0xf03e
+    f030:	92 42 00 02 	mov	&0x0200,&0x0120	
+    f034:	20 01 
+    f036:	1f 83       	dec	r15		
+    f038:	cf 43 00 02 	mov.b	#0,	512(r15);r3 As==00, 0x0200(r15)
+    f03c:	f9 23       	jnz	$-12     	;abs 0xf030
+
+0000f03e <main>:
+
+/**
+Main function with a blinking LED
+*/
+int main(void) 
+{
+    f03e:	21 82       	sub	#4,	r1	;r2 As==10
+	WDTCTL = WDTPW + WDTHOLD;          // Disable watchdog timer
+    f040:	b2 40 80 5a 	mov	#23168,	&0x0120	;#0x5a80
+    f044:	20 01 
+	volatile uint16_t* led_port = (volatile uint16_t*)(0x00);
+	
+    while (1) 
+    {                         
+				
+		*led_port = 0x00;
+    f046:	82 43 00 00 	mov	#0,	&0x0000	;r3 As==00
+#include<inttypes.h>
+
+void delay(uint32_t del)
+{
+	volatile uint32_t i;
+	for(i=0;i<del;i++)
+    f04a:	81 43 00 00 	mov	#0,	0(r1)	;r3 As==00, 0x0000(r1)
+    f04e:	81 43 02 00 	mov	#0,	2(r1)	;r3 As==00, 0x0002(r1)
+    f052:	2e 41       	mov	@r1,	r14	
+    f054:	1f 41 02 00 	mov	2(r1),	r15	;0x0002(r1)
+    f058:	1f 93       	cmp	#1,	r15	;r3 As==01
+    f05a:	05 28       	jnc	$+12     	;abs 0xf066
+    f05c:	2f 93       	cmp	#2,	r15	;r3 As==10
+    f05e:	17 2c       	jc	$+48     	;abs 0xf08e
+    f060:	3e 90 a0 86 	cmp	#-31072,r14	;#0x86a0
+    f064:	14 2c       	jc	$+42     	;abs 0xf08e
+	{
+		nop();
+    f066:	03 43       	nop			
+		nop();
+    f068:	03 43       	nop			
+#include<inttypes.h>
+
+void delay(uint32_t del)
+{
+	volatile uint32_t i;
+	for(i=0;i<del;i++)
+    f06a:	2e 41       	mov	@r1,	r14	
+    f06c:	1f 41 02 00 	mov	2(r1),	r15	;0x0002(r1)
+    f070:	1e 53       	inc	r14		
+    f072:	0f 63       	adc	r15		
+    f074:	81 4e 00 00 	mov	r14,	0(r1)	;0x0000(r1)
+    f078:	81 4f 02 00 	mov	r15,	2(r1)	;0x0002(r1)
+    f07c:	2e 41       	mov	@r1,	r14	
+    f07e:	1f 41 02 00 	mov	2(r1),	r15	;0x0002(r1)
+    f082:	1f 93       	cmp	#1,	r15	;r3 As==01
+    f084:	f0 2b       	jnc	$-30     	;abs 0xf066
+    f086:	03 20       	jnz	$+8      	;abs 0xf08e
+    f088:	3e 90 a0 86 	cmp	#-31072,r14	;#0x86a0
+    f08c:	ec 2b       	jnc	$-38     	;abs 0xf066
+    while (1) 
+    {                         
+				
+		*led_port = 0x00;
+		delay(100000);
+		*led_port = 0x01;
+    f08e:	92 43 00 00 	mov	#1,	&0x0000	;r3 As==01
+#include<inttypes.h>
+
+void delay(uint32_t del)
+{
+	volatile uint32_t i;
+	for(i=0;i<del;i++)
+    f092:	81 43 00 00 	mov	#0,	0(r1)	;r3 As==00, 0x0000(r1)
+    f096:	81 43 02 00 	mov	#0,	2(r1)	;r3 As==00, 0x0002(r1)
+    f09a:	2e 41       	mov	@r1,	r14	
+    f09c:	1f 41 02 00 	mov	2(r1),	r15	;0x0002(r1)
+    f0a0:	3f 90 03 00 	cmp	#3,	r15	;#0x0003
+    f0a4:	05 28       	jnc	$+12     	;abs 0xf0b0
+    f0a6:	2f 92       	cmp	#4,	r15	;r2 As==10
+    f0a8:	ce 2f       	jc	$-98     	;abs 0xf046
+    f0aa:	3e 90 40 0d 	cmp	#3392,	r14	;#0x0d40
+    f0ae:	cb 2f       	jc	$-104    	;abs 0xf046
+	{
+		nop();
+    f0b0:	03 43       	nop			
+		nop();
+    f0b2:	03 43       	nop			
+#include<inttypes.h>
+
+void delay(uint32_t del)
+{
+	volatile uint32_t i;
+	for(i=0;i<del;i++)
+    f0b4:	2e 41       	mov	@r1,	r14	
+    f0b6:	1f 41 02 00 	mov	2(r1),	r15	;0x0002(r1)
+    f0ba:	1e 53       	inc	r14		
+    f0bc:	0f 63       	adc	r15		
+    f0be:	81 4e 00 00 	mov	r14,	0(r1)	;0x0000(r1)
+    f0c2:	81 4f 02 00 	mov	r15,	2(r1)	;0x0002(r1)
+    f0c6:	2e 41       	mov	@r1,	r14	
+    f0c8:	1f 41 02 00 	mov	2(r1),	r15	;0x0002(r1)
+    f0cc:	3f 90 03 00 	cmp	#3,	r15	;#0x0003
+    f0d0:	ef 2b       	jnc	$-32     	;abs 0xf0b0
+    f0d2:	b9 23       	jnz	$-140    	;abs 0xf046
+    f0d4:	3e 90 40 0d 	cmp	#3392,	r14	;#0x0d40
+    f0d8:	eb 2b       	jnc	$-40     	;abs 0xf0b0
+    f0da:	b5 3f       	jmp	$-148    	;abs 0xf046
+
+0000f0dc <__ctors_end>:
+    f0dc:	30 40 22 f1 	br	#0xf122	
+
+0000f0e0 <delay>:
+#include "omsp_system.h"
+#include<inttypes.h>
+
+void delay(uint32_t del)
+{
+    f0e0:	21 82       	sub	#4,	r1	;r2 As==10
+	volatile uint32_t i;
+	for(i=0;i<del;i++)
+    f0e2:	81 43 00 00 	mov	#0,	0(r1)	;r3 As==00, 0x0000(r1)
+    f0e6:	81 43 02 00 	mov	#0,	2(r1)	;r3 As==00, 0x0002(r1)
+    f0ea:	2c 41       	mov	@r1,	r12	
+    f0ec:	1d 41 02 00 	mov	2(r1),	r13	;0x0002(r1)
+    f0f0:	0d 9f       	cmp	r15,	r13	
+    f0f2:	04 28       	jnc	$+10     	;abs 0xf0fc
+    f0f4:	0f 9d       	cmp	r13,	r15	
+    f0f6:	13 28       	jnc	$+40     	;abs 0xf11e
+    f0f8:	0c 9e       	cmp	r14,	r12	
+    f0fa:	11 2c       	jc	$+36     	;abs 0xf11e
+	{
+		nop();
+    f0fc:	03 43       	nop			
+		nop();
+    f0fe:	03 43       	nop			
+#include<inttypes.h>
+
+void delay(uint32_t del)
+{
+	volatile uint32_t i;
+	for(i=0;i<del;i++)
+    f100:	2c 41       	mov	@r1,	r12	
+    f102:	1d 41 02 00 	mov	2(r1),	r13	;0x0002(r1)
+    f106:	1c 53       	inc	r12		
+    f108:	0d 63       	adc	r13		
+    f10a:	81 4c 00 00 	mov	r12,	0(r1)	;0x0000(r1)
+    f10e:	81 4d 02 00 	mov	r13,	2(r1)	;0x0002(r1)
+    f112:	2c 41       	mov	@r1,	r12	
+    f114:	1d 41 02 00 	mov	2(r1),	r13	;0x0002(r1)
+    f118:	0d 9f       	cmp	r15,	r13	
+    f11a:	f0 2b       	jnc	$-30     	;abs 0xf0fc
+    f11c:	ed 27       	jz	$-36     	;abs 0xf0f8
+	{
+		nop();
+		nop();
+	}
+}
+    f11e:	21 52       	add	#4,	r1	;r2 As==10
+    f120:	30 41       	ret			
+
+0000f122 <_unexpected_>:
+    f122:	00 13       	reti			
+
+0000f124 <__stop_progExec__>:
+    f124:	32 d0 f0 00 	bis	#240,	r2	;#0x00f0
+    f128:	fd 3f       	jmp	$-4      	;abs 0xf124
+
+Disassembly of section .vectors:
+
+0000ffe0 <__ivtbl_16>:
+    ffe0:	dc f0 dc f0 dc f0 dc f0 dc f0 dc f0 dc f0 dc f0     ................
+    fff0:	dc f0 dc f0 dc f0 dc f0 dc f0 dc f0 dc f0 00 f0     ................
