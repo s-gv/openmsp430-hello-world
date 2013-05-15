@@ -59,7 +59,7 @@ module top(
 	 assign PER_DATA_OUT = 0;
 	 always @(posedge clk or posedge rst) begin
 		if(rst) led <= 0;
-		else if(per_we[0])
+		else if(per_we[0] & per_cs)
 				if(PER_ADDR == 0)
 					led <= PER_DATA_IN[0];
 	 end
